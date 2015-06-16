@@ -16,24 +16,24 @@ class Item extends React.Component {
     })
   }
 
-  componentDidUpdate() {
-    this.props.transit.update(this.state)
-  }
-
   render() {
     const style = {
-      background: '#ddd',
+      background: this.state.active ? 'blue' : '#ddd',
       width: 250,
       height: 50,
-      transform: `translate(${this.props.transit.values.x}px, 0)`,
+      transform: `translate(${this.props.transit.x}px, 0)`,
       marginBottom: 10
     }
 
-    return <div style={style} onClick={this.onClick.bind(this)} />
+    return (
+      <Transit.State active={this.state.active}>
+        <div style={style} onClick={this.onClick.bind(this)} />
+      </Transit.State>
+    )
   }
 }
 
-const TransitItem = Transit.createContainer(Item, (state) => {
+const TransitItem = Transit.create(Item, state => {
   return {
     x: state.active ? 100 : 0
   }
