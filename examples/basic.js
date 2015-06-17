@@ -6,7 +6,7 @@ class Item extends React.Component {
     super(props)
 
     this.state = {
-      active: false
+      active: true
     }
   }
 
@@ -33,7 +33,7 @@ class Item extends React.Component {
   }
 }
 
-const TransitItem = Transit.create(Item, state => {
+const TransitItem = Transit.createContainer(Item, state => {
   return {
     x: state.active ? 100 : 0
   }

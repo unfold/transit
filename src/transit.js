@@ -1,6 +1,9 @@
 import React from 'react'
 import ReactTransitionGroup from 'react/lib/ReactTransitionGroup'
+import xor from 'lodash/array/xor'
 import isEqual from 'lodash/lang/isEqual'
+import omit from 'lodash/object/omit'
+import Animation from 'additive-animation'
 
 class StateComponent extends React.Component {
   constructor(props, context) {
@@ -10,7 +13,12 @@ class StateComponent extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.context.update(nextProps)
+    const propsWithoutChildren = omit(this.props, 'children')
+    const nextPropsWithoutChildren = omit(nextProps, 'children')
+
+    if(!isEqual(propsWithoutChildren, nextPropsWithoutChildren)) {
+      this.context.update(nextProps)
+    }
   }
 
   componentDidMount() {
@@ -37,9 +45,13 @@ function createContainer(Component, getMorphTarget) {
     constructor(props) {
       super(props)
 
-      this.state = {
-        morphTarget: {}
-      }
+      this.animation = new Animation({
+        onRender: this.onRender.bind(this)
+      })
+
+      this.morphTarget = {}
+
+      this.state = {}
     }
 
     getChildContext() {
@@ -48,18 +60,30 @@ function createContainer(Component, getMorphTarget) {
       }
     }
 
+    onRender(state) {
+      this.setState(state)
+    }
+
     update() {
-      this.setState({
-        morphTarget: getMorphTarget.apply(null, Array.prototype.slice.call(arguments))
-      })
+      const prev = this.morphTarget
+      const next = getMorphTarget.apply(null, Array.prototype.slice.call(arguments))
+      const keyDiff = xor(Object.keys(prev), Object.keys(next))
+
+      this.morphTarget = next
+
+      if(!keyDiff.length) {
+        this.animation.animate(prev, next, 1000)
+      } else {
+        this.setState(next)
+      }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-      return !isEqual(this.state.morphTarget, nextState.morphTarget)
+      return !isEqual(this.state, nextState)
     }
 
     render() {
-      return <Component {...this.props} transit={this.state.morphTarget} />
+      return <Component {...this.props} transit={this.state} />
     }
   }
 
@@ -71,7 +95,7 @@ function createContainer(Component, getMorphTarget) {
 }
 
 export default {
-  create: createContainer,
+  createContainer: createContainer,
 
   State: StateComponent,
 
