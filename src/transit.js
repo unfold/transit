@@ -72,14 +72,14 @@ function createContainer(Component, getMorphTarget) {
       this.morphTarget = next
 
       if(!keyDiff.length) {
-        this.animation.animate(prev, next, 1000)
+        this.animation.animate(prev, next, 200, 'easeOutExpo')
       } else {
         this.setState(next)
       }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-      return !isEqual(this.state, nextState)
+      return !isEqual(this.state, nextState) || !isEqual(this.props, nextProps)
     }
 
     render() {
@@ -95,13 +95,9 @@ function createContainer(Component, getMorphTarget) {
 }
 
 export default {
-  createContainer: createContainer,
+  create: createContainer,
 
   State: StateComponent,
 
-  Transition: TransitionComponent,
-
-  update: function(prevProps, prevState) {
-    this.props._morphosis.update(prevProps, prevState, this.state)
-  }
+  Transition: TransitionComponent
 }
