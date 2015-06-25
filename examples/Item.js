@@ -31,6 +31,8 @@ class Item extends React.Component {
       marginBottom: 10
     }, this.props.transit)
 
+    console.log('Render')
+
     return (
       <Transit.State hover={this.state.hover}>
         <div
@@ -44,22 +46,19 @@ class Item extends React.Component {
   }
 }
 
-// export default Transit.create(Item, state => {
-//   opacity: state.active ? 1 : 0.2,
-//   height: state.active ? 200 : 50
-// }, {
-//   enter: state => {
-//     opacity: 0
-//   },
-//
-//   leave: state => {
-//
-//   }
-// })
-
 export default Transit.create(Item, state => {
   return {
-    opacity: state.hover ? 1 : 0.2,
-    width: state.hover ? 250 : 200
+    width: state.hover ? 1000 : 200,
+    opacity: 1
+  }
+}, state => {
+  return {
+    width: 0,
+    opacity: 0
+  }
+}, state => {
+  return {
+    width: 0,
+    opacity: 0
   }
 })

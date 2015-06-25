@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactTransitionGroup from 'react/lib/ReactTransitionGroup'
 import xor from 'lodash/array/xor'
 import isEqual from 'lodash/lang/isEqual'
 import omit from 'lodash/object/omit'
@@ -25,6 +24,7 @@ class StateComponent extends React.Component {
     this.context.update(this.props)
   }
 
+
   render() {
     return <div children={this.props.children} />
   }
@@ -34,13 +34,7 @@ StateComponent.contextTypes = {
   update: React.PropTypes.func.isRequired
 }
 
-class TransitionComponent extends React.Component {
-  render() {
-    return <ReactTransitionGroup children={this.props.children} />
-  }
-}
-
-function createContainer(Component, getMorphTarget) {
+function createContainer(Component, getMorphTarget, getEnterState, getLeaveState) {
   class ContainerComponent extends React.Component {
     constructor(props) {
       super(props)
@@ -49,7 +43,7 @@ function createContainer(Component, getMorphTarget) {
         onRender: this.onRender.bind(this)
       })
 
-      this.morphTarget = {}
+      this.morphTarget = null
 
       this.state = {}
     }
@@ -61,20 +55,37 @@ function createContainer(Component, getMorphTarget) {
     }
 
     onRender(state) {
-      this.setState(state)
+      if(this.mounted) {
+        this.setState(state)
+      }
+    }
+
+    componentDidMount() {
+      this.mounted = true
+    }
+
+    componentWillLeave(callback) {
+      console.log('Leaving')
+
+      setTimeout(callback, 1000)
+
+      this.animation.animate(this.state, { width: 0 }, 1000, 'easeOutExpo')
+    }
+
+    componentDidLeave() {
+      this.mounted = false
     }
 
     update() {
-      const prev = this.morphTarget
-      const next = getMorphTarget.apply(null, Array.prototype.slice.call(arguments))
+      const args = Array.prototype.slice.call(arguments)
+      const prev = this.morphTarget || getEnterState.apply(null, args)
+      const next = getMorphTarget.apply(null, args)
       const keyDiff = xor(Object.keys(prev), Object.keys(next))
 
       this.morphTarget = next
 
       if(!keyDiff.length) {
-        this.animation.animate(prev, next, 200, 'easeOutExpo')
-      } else {
-        this.setState(next)
+        this.animation.animate(prev, next, 1000, 'easeOutExpo')
       }
     }
 
@@ -97,7 +108,5 @@ function createContainer(Component, getMorphTarget) {
 export default {
   create: createContainer,
 
-  State: StateComponent,
-
-  Transition: TransitionComponent
+  State: StateComponent
 }
