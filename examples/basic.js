@@ -6,27 +6,14 @@ import ReactTransitionGroup from 'react/lib/ReactTransitionGroup'
 import Spring from '../src/spring'
 
 import Item from './Item'
-
-class Ball extends React.Component {
-  render() {
-    const style = {
-      width: 50,
-      height: 50,
-      background: 'black',
-      borderRadius: '50%',
-      transform: `translateX(${this.props.position}px)`
-    }
-
-    return <div style={style} />
-  }
-}
+import Ball from './Ball'
 
 class Application extends React.Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      show: false,
+      show: true,
       ball: 0
     }
   }
@@ -75,14 +62,14 @@ class Application extends React.Component {
     return (
       <div>
         <h2>Spring</h2>
-        <button onClick={this.togglePosition.bind(this)}>Toggle position</button>
-        <Ball position={this.state.position} />
+        <Ball />
 
         <h2>Transition</h2>
         <button onClick={this.toggleShow.bind(this)}>Toggle items</button>
-        <ReactTransitionGroup>
+
+        <Transit.Transition>
           {this.renderItems()}
-        </ReactTransitionGroup>
+        </Transit.Transition>
       </div>
     )
   }

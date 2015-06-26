@@ -6,11 +6,11 @@ export default class Spring extends Emitter {
   constructor(params) {
     super()
 
-    this.params = defaults(params, {
-      stiffness: 0.1,
-      friction: 0.8,
+    this.params = defaults(params || {}, {
+      stiffness: 0.9,
+      friction: 0.3,
       mass: 10,
-      restThreshold: 0.1
+      restThreshold: 0.001
     })
 
     this.acceleration = 0
@@ -29,7 +29,9 @@ export default class Spring extends Emitter {
       requestAnimationFrame(this.step)
     } else {
       this.resting = true
-      console.log('Spring resting')
+      this.position = this.target
+      this.emit('update', this.position)
+      this.emit('rest')
     }
   }
 

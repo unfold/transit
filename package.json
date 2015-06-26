@@ -16,7 +16,7 @@
     "wildemitter": "^1.1.0"
   },
   "scripts": {
-    "start": "nws -d build -p 3000 & webpack -w"
+    "start": "nws -d build -p 4000 & webpack -w"
   },
   "author": "",
   "license": "ISC"
