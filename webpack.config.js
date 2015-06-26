@@ -1,4 +1,6 @@
 module.exports = {
+  devtool: 'eval',
+
   entry: {
     basic: [
       './examples/basic.js',
