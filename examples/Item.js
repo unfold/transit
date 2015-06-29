@@ -46,11 +46,15 @@ class Item extends React.Component {
 
   render() {
     const {rotateZ, rotateY, scale} = this.props.transit
+    const {hover, active, down} = this.state
+    const flipside = rotateY > 90
 
     let background = 'black'
+    let color = 'white'
 
-    if(rotateY > 90) {
+    if(flipside) {
       background = 'salmon'
+      color = 'black'
     }
 
     const style = assign({
@@ -58,11 +62,12 @@ class Item extends React.Component {
       width: 100,
       height: 100,
       margin: 20,
+      color: color,
       transform: `rotateZ(${rotateZ}deg) rotateY(${rotateY}deg) scale(${scale})`
     })
 
     return (
-      <Transit.State hover={this.state.hover} active={this.state.active} down={this.state.down}>
+      <Transit.State hover={hover} active={active} down={down}>
         <div style={{ perspective: 400, float: 'left' }}>
           <div
             style={style}
@@ -71,7 +76,12 @@ class Item extends React.Component {
             onMouseUp={this.onMouseUp.bind(this)}
             onMouseEnter={this.onMouseEnter.bind(this)}
             onMouseLeave={this.onMouseLeave.bind(this)}
-          />
+          >
+
+            <div className="label" style={{
+              transform: `rotateY(${flipside ? -180 : 0}deg)`
+            }}>{flipside ? 'Transit' : 'Hello'}</div>
+          </div>
         </div>
       </Transit.State>
     )
