@@ -35,12 +35,8 @@ export default class Spring extends Emitter {
     }
   }
 
-  set(value, velocity) {
+  set(value) {
     this.target = value
-
-    if(velocity) {
-      this.velocity = velocity * (this.target - this.position < 0 ? -1 : 1)
-    }
 
     if(this.resting) {
       this.scheduleStep()
