@@ -6,12 +6,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
-
-var _wildemitter = require('wildemitter');
-
-var _wildemitter2 = _interopRequireDefault(_wildemitter);
-
 var _lodashObjectAssign = require('lodash/object/assign');
 
 var _lodashObjectAssign2 = _interopRequireDefault(_lodashObjectAssign);
@@ -20,11 +14,9 @@ var _lodashObjectDefaults = require('lodash/object/defaults');
 
 var _lodashObjectDefaults2 = _interopRequireDefault(_lodashObjectDefaults);
 
-var Spring = (function (_Emitter) {
+var Spring = (function () {
   function Spring(params) {
     _classCallCheck(this, Spring);
-
-    _Emitter.call(this);
 
     this.params = _lodashObjectDefaults2['default'](params || {}, {
       stiffness: 0.9,
@@ -43,17 +35,20 @@ var Spring = (function (_Emitter) {
     this.scheduleStep();
   }
 
-  _inherits(Spring, _Emitter);
-
   Spring.prototype.scheduleStep = function scheduleStep() {
+    var _params = this.params;
+    var onUpdate = _params.onUpdate;
+    var onRest = _params.onRest;
+
     if (!this.shouldRest()) {
       this.resting = false;
       requestAnimationFrame(this.step);
     } else {
       this.resting = true;
       this.position = this.target;
-      this.emit('update', this.position);
-      this.emit('rest');
+
+      onUpdate && onUpdate(this.position);
+      onRest && onRest();
     }
   };
 
@@ -66,6 +61,7 @@ var Spring = (function (_Emitter) {
   };
 
   Spring.prototype.step = function step() {
+    var onUpdate = this.params.onUpdate;
     var params = this.params;
 
     var now = new Date().getTime();
@@ -83,7 +79,7 @@ var Spring = (function (_Emitter) {
 
     this.time = now;
 
-    this.emit('update', this.position);
+    onUpdate && onUpdate(this.position);
 
     this.scheduleStep();
   };
@@ -95,7 +91,7 @@ var Spring = (function (_Emitter) {
   };
 
   return Spring;
-})(_wildemitter2['default']);
+})();
 
 exports['default'] = Spring;
 module.exports = exports['default'];
