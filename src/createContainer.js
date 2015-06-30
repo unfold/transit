@@ -4,7 +4,7 @@ import map from 'lodash/collection/map'
 import forEach from 'lodash/collection/forEach'
 import shallowEqual from 'react/lib/shallowEqual'
 
-import Spring from './dynamics/Spring'
+import * as transitionTypes from './transitions'
 
 export default function createContainer(Component, getTarget) {
   class ContainerComponent extends React.Component {
@@ -15,13 +15,17 @@ export default function createContainer(Component, getTarget) {
       this.target = {}
 
       // TODO: Should be general (e.g. this.transitions)
-      this.springs = {}
+      this.transitions = {}
 
       this.checkLeaveStatus = this.checkLeaveStatus.bind(this)
     }
 
+    isLeaving() {
+      return !!this.props.leaveCallback
+    }
+
     checkLeaveStatus() {
-      const resting = map(this.springs, spring => spring.resting)
+      const resting = map(this.transitions, transition => transition.resting)
 
       if(all(resting)) {
         this.props.leaveCallback()
@@ -29,26 +33,26 @@ export default function createContainer(Component, getTarget) {
     }
 
     leave() {
-      forEach(this.springs, (spring, key) => {
+      forEach(this.transitions, (transition, key) => {
         const target = this.target.leave && this.target.leave[key]
 
         if(target !== undefined) {
-          spring.set(target)
+          transition.set(target.value)
         }
 
-        spring.on('rest', this.checkLeaveStatus)
+        transition.on('rest', this.checkLeaveStatus)
       })
     }
 
     cancelLeave() {
-      forEach(this.springs, (spring, key) => {
-        const target = this.target.state[key]
+      forEach(this.transitions, (transition, key) => {
+        const target = this.target.state && this.target.state[key]
 
         if(target !== undefined) {
-          spring.set(target)
+          transition.set(target.value)
         }
 
-        spring.off('rest', this.checkLeaveStatus)
+        transition.off('rest', this.checkLeaveStatus)
       })
     }
 
@@ -59,23 +63,13 @@ export default function createContainer(Component, getTarget) {
     }
 
     onRender(state) {
-      if(this.mounted) {
-        this.setState(state)
-      }
+      this.setState(state)
     }
 
-    onSpringUpdate(key, value) {
+    onTransitionUpdate(key, value) {
       this.setState({
         [key]: value
       })
-    }
-
-    componentDidMount() {
-      this.mounted = true
-    }
-
-    componentWillUnmount() {
-      this.mounted = false
     }
 
     componentWillReceiveProps(nextProps) {
@@ -91,30 +85,31 @@ export default function createContainer(Component, getTarget) {
       }
     }
 
-    update() {
-      if(this.props.leaveCallback) {
+    update(...args) {
+      if(this.isLeaving()) {
         return
       }
 
-      const args = Array.prototype.slice.call(arguments)
+      this.target = getTarget.call(null, ...args)
 
-      this.target = getTarget.apply(null, args)
+      forEach(this.target.state, (params, key) => {
+        let transition = this.transitions[key]
 
-      forEach(this.target.state, (value, key) => {
-        let spring = this.springs[key]
-
-        if(!spring) {
+        if(!transition) {
           const enterTarget = this.target.enter && this.target.enter[key]
+          const TransitionType = transitionTypes[params.transition.type]
 
-          spring = this.springs[key] = new Spring()
-          spring.on('update', this.onSpringUpdate.bind(this, key))
+          transition = new TransitionType()
+          transition.on('update', this.onTransitionUpdate.bind(this, key))
 
           if(enterTarget) {
-            spring.position = enterTarget
+            transition.position = enterTarget.value
           }
+
+          this.transitions[key] = transition
         }
 
-        spring.set(value)
+        transition.set(params.value)
       })
     }
 

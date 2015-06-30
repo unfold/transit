@@ -88,22 +88,67 @@ class Item extends React.Component {
   }
 }
 
+const transition = {
+  type: 'spring'
+}
+
 export default Transit.create(Item, props => {
   return {
     state: {
-      rotateZ: 0,
-      rotateY: props.active ? 180 : 0,
-      scale: props.down ? 1 : !props.down && props.hover ? 1.2 : 1
+      rotateZ: {
+        transition: transition,
+        value: 0
+      },
+      rotateY: {
+        transition: transition,
+        value: props.active ? 180 : 0
+      },
+      scale: {
+        transition: transition,
+        value: props.down ? 1 : !props.down && props.hover ? 1.2 : 1
+      }
     },
 
     enter: {
-      rotateZ: 360,
-      scale: 0
+      rotateZ: {
+        transition: transition,
+        value: 360
+      },
+      scale: {
+        transition: transition,
+        value: 0
+      }
     },
 
     leave: {
-      rotateZ: 0,
-      scale: 0
+      rotateZ: {
+        transition: transition,
+        value: 0
+      },
+      scale: {
+        transition: transition,
+        value: 0
+      }
     }
   }
 })
+
+// export default Transit.create(Item, props => {
+//   return {
+//     state: {
+//       rotateZ: 0,
+//       rotateY: props.active ? 180 : 0,
+//       scale: props.down ? 1 : !props.down && props.hover ? 1.2 : 1
+//     },
+//
+//     enter: {
+//       rotateZ: 360,
+//       scale: 0
+//     },
+//
+//     leave: {
+//       rotateZ: 0,
+//       scale: 0
+//     }
+//   }
+// })
