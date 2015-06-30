@@ -20,7 +20,7 @@
     "webpack": "^1.9.11"
   },
   "scripts": {
-    "start": "./node_modules/.bin/nws -d examples/build -p 4000 & webpack examples/webpack.config -w",
+    "start": "./node_modules/.bin/nws -d examples/build -p 4000 & webpack --config examples/webpack.config -w",
     "build": "scripts/build.sh",
     "release": "scripts/release.sh"
   },
