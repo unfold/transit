@@ -2,7 +2,7 @@
   "name": "react-transit",
   "version": "0.0.1",
   "description": "Declarative state/prop transitions in React",
-  "main": "index.js",
+  "main": "lib",
   "repository": {
     "type": "git",
     "url": "https://github.com/unfold/transit"
@@ -14,22 +14,14 @@
     "additive-animation": "^0.1.0",
     "babel": "^5.5.8",
     "babel-core": "^5.5.8",
+    "babel-loader": "^5.1.4",
     "file-loader": "^0.8.4",
     "lodash": "^3.9.3",
     "node-libs-browser": "^0.5.2",
     "react": "^0.13.3",
+    "webpack": "^1.9.11",
     "wildemitter": "^1.1.0"
   },
-  "scripts": {
-    "start": "./node_modules/.bin/nws -d examples/build -p 4000 & webpack examples/webpack.config -w",
-    "build": "scripts/build.sh",
-    "release": "scripts/release.sh"
-  },
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "babel-loader": "^5.1.4",
-    "webpack": "^1.9.11",
-    "nws": "^0.6.1"
-  }
+  "license": "ISC"
 }

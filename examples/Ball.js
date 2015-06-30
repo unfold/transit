@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Transit from '../main'
+import Transit from '../src'
 
 export default class Ball extends React.Component {
   constructor(props) {

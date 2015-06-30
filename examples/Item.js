@@ -1,5 +1,5 @@
 import React from 'react'
-import Transit from '../main'
+import Transit from '../src'
 import assign from 'lodash/object/assign'
 
 class Item extends React.Component {

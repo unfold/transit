@@ -2,7 +2,7 @@ import React from 'react'
 import all from 'lodash/collection/all'
 import map from 'lodash/collection/map'
 import forEach from 'lodash/collection/forEach'
-import shallowEqual from 'React/lib/shallowEqual'
+import shallowEqual from 'react/lib/shallowEqual'
 
 import Spring from './dynamics/Spring'
 
