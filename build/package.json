@@ -1,8 +1,15 @@
 {
   "name": "react-transit",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "Declarative state/prop transitions in React",
   "main": "lib",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unfold/transit"
+  },
+  "bugs": {
+    "url": "https://github.com/unfold/transit/issues"
+  },
   "dependencies": {
     "additive-animation": "^0.1.0",
     "babel": "^5.5.8",

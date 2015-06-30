@@ -3,6 +3,13 @@
   "version": "0.0.1",
   "description": "Declarative state/prop transitions in React",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unfold/transit"
+  },
+  "bugs": {
+    "url": "https://github.com/unfold/transit/issues"
+  },
   "dependencies": {
     "additive-animation": "^0.1.0",
     "babel": "^5.5.8",
@@ -17,7 +24,8 @@
   },
   "scripts": {
     "start": "nws -d build -p 4000 & webpack -w",
-    "build": "scripts/build.sh"
+    "build": "scripts/build.sh",
+    "release": "scripts/release.sh"
   },
   "author": "",
   "license": "ISC"
