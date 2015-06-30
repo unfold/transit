@@ -26,7 +26,6 @@ git commit -am "Version $next_version"
 
 git tag $next_ref
 
-## Uncomment after first release
-# git push origin master
+git push origin master
 
 npm publish build
