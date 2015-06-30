@@ -1,5 +1,5 @@
 import React from 'react'
-import Transit from '../main'
+import Transit from '../src'
 
 import Item from './Item'
 import Ball from './Ball'
