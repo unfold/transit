@@ -1,5 +1,6 @@
 import React from 'react'
 import all from 'lodash/collection/all'
+import assign from 'lodash/object/assign'
 import map from 'lodash/collection/map'
 import forEach from 'lodash/collection/forEach'
 import shallowEqual from 'react/lib/shallowEqual'
@@ -14,7 +15,6 @@ export default function createContainer(Component, getTarget) {
       this.state = {}
       this.target = {}
 
-      // TODO: Should be general (e.g. this.transitions)
       this.transitions = {}
     }
 
@@ -78,9 +78,10 @@ export default function createContainer(Component, getTarget) {
           const enterTarget = this.target.enter && this.target.enter[key]
           const TransitionType = transitionTypes[params.transition.type]
 
-          transition = new TransitionType(params.transition)
-          transition.on('update', this.onTransitionUpdate.bind(this, key))
-          transition.on('rest', this.onTransitionRest.bind(this, key))
+          transition = new TransitionType(assign({
+            onUpdate: this.onTransitionUpdate.bind(this, key),
+            onRest: this.onTransitionRest.bind(this, key)
+          }, params.transition))
 
           if(enterTarget) {
             transition.position = enterTarget.value

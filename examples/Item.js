@@ -133,8 +133,13 @@ export default Transit.create(Item, props => {
   }
 })
 
+// Todo: implement transformer that transforms the following into the above
 // export default Transit.create(Item, props => {
 //   return {
+//     transition: {
+//       type: 'spring'
+//     },
+//
 //     state: {
 //       rotateZ: 0,
 //       rotateY: props.active ? 180 : 0,

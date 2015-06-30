@@ -11,14 +11,13 @@
     "url": "https://github.com/unfold/transit/issues"
   },
   "dependencies": {
-    "additive-animation": "^0.1.0",
     "babel": "^5.5.8",
     "babel-core": "^5.5.8",
     "file-loader": "^0.8.4",
     "lodash": "^3.9.3",
     "node-libs-browser": "^0.5.2",
     "react": "^0.13.3",
-    "wildemitter": "^1.1.0"
+    "webpack": "^1.9.11"
   },
   "scripts": {
     "start": "./node_modules/.bin/nws -d examples/build -p 4000 & webpack examples/webpack.config -w",
