@@ -1,16 +1,14 @@
 module.exports = {
   devtool: 'eval',
 
-  entry: {
-    basic: [
-      './examples/basic.js',
-      './examples/basic.html'
-    ]
-  },
+  entry: [
+    './examples/index.html',
+    './examples/index.js'
+  ],
 
   output: {
     path: __dirname + '/build',
-    filename: '[name].js'
+    filename: 'index.js'
   },
 
   module: {
