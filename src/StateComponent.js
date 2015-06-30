@@ -1,6 +1,6 @@
 import React from 'react'
 import omit from 'lodash/object/omit'
-import shallowEqual from 'React/lib/shallowEqual'
+import shallowEqual from 'react/lib/shallowEqual'
 
 export default class StateComponent extends React.Component {
   constructor(props, context) {

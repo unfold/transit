@@ -1,8 +1,8 @@
 {
   "name": "react-transit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Declarative state/prop transitions in React",
-  "main": "index.js",
+  "main": "lib",
   "dependencies": {
     "additive-animation": "^0.1.0",
     "babel": "^5.5.8",
@@ -14,10 +14,6 @@
     "react": "^0.13.3",
     "webpack": "^1.9.11",
     "wildemitter": "^1.1.0"
-  },
-  "scripts": {
-    "start": "nws -d build -p 4000 & webpack -w",
-    "build": "scripts/build.sh"
   },
   "author": "",
   "license": "ISC"

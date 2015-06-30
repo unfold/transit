@@ -2,8 +2,8 @@ module.exports = {
   devtool: 'eval',
 
   entry: [
-    './examples/index.html',
-    './examples/index.js'
+    './index.html',
+    './index.js'
   ],
 
   output: {
