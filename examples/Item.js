@@ -88,20 +88,22 @@ class Item extends React.Component {
   }
 }
 
-export default Transit.create(Item, state => {
+export default Transit.create(Item, props => {
   return {
-    rotateZ: 0,
-    rotateY: state.active ? 180 : 0,
-    scale: state.down ? 1 : state.hover ? 1.2 : 1
-  }
-}, state => {
-  return {
-    rotateZ: 360,
-    scale: 0
-  }
-}, state => {
-  return {
-    rotateZ: 0,
-    scale: 0
+    state: {
+      rotateZ: 0,
+      rotateY: props.active ? 180 : 0,
+      scale: props.down ? 1 : !props.down && props.hover ? 1.2 : 1
+    },
+
+    enter: {
+      rotateZ: 360,
+      scale: 0
+    },
+
+    leave: {
+      rotateZ: 0,
+      scale: 0
+    }
   }
 })

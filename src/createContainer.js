@@ -6,14 +6,16 @@ import shallowEqual from 'react/lib/shallowEqual'
 
 import Spring from './dynamics/Spring'
 
-export default function createContainer(Component, getTarget, getEnterTarget, getLeaveTarget) {
+export default function createContainer(Component, getTarget) {
   class ContainerComponent extends React.Component {
     constructor(props) {
       super(props)
 
-      this.springs = {}
-
       this.state = {}
+      this.target = {}
+
+      // TODO: Should be general (e.g. this.transitions)
+      this.springs = {}
 
       this.checkLeaveStatus = this.checkLeaveStatus.bind(this)
     }
@@ -28,7 +30,7 @@ export default function createContainer(Component, getTarget, getEnterTarget, ge
 
     leave() {
       forEach(this.springs, (spring, key) => {
-        const target = this.leaveTarget[key]
+        const target = this.target.leave && this.target.leave[key]
 
         if(target !== undefined) {
           spring.set(target)
@@ -40,7 +42,7 @@ export default function createContainer(Component, getTarget, getEnterTarget, ge
 
     cancelLeave() {
       forEach(this.springs, (spring, key) => {
-        const target = this.target[key]
+        const target = this.target.state[key]
 
         if(target !== undefined) {
           spring.set(target)
@@ -97,14 +99,12 @@ export default function createContainer(Component, getTarget, getEnterTarget, ge
       const args = Array.prototype.slice.call(arguments)
 
       this.target = getTarget.apply(null, args)
-      this.enterTarget = getEnterTarget.apply(null, args)
-      this.leaveTarget = getLeaveTarget.apply(null, args)
 
-      forEach(this.target, (value, key) => {
+      forEach(this.target.state, (value, key) => {
         let spring = this.springs[key]
 
         if(!spring) {
-          const enterTarget = this.enterTarget[key]
+          const enterTarget = this.target.enter && this.target.enter[key]
 
           spring = this.springs[key] = new Spring()
           spring.on('update', this.onSpringUpdate.bind(this, key))
