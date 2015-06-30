@@ -4,7 +4,7 @@ import map from 'lodash/collection/map'
 import forEach from 'lodash/collection/forEach'
 import shallowEqual from 'React/lib/shallowEqual'
 
-import Spring from '../src/Spring'
+import Spring from './dynamics/Spring'
 
 export default function createContainer(Component, getTarget, getEnterTarget, getLeaveTarget) {
   class ContainerComponent extends React.Component {
