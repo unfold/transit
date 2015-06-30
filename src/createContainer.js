@@ -16,20 +16,16 @@ export default function createContainer(Component, getTarget) {
 
       // TODO: Should be general (e.g. this.transitions)
       this.transitions = {}
+    }
 
-      this.checkLeaveStatus = this.checkLeaveStatus.bind(this)
+    getChildContext() {
+      return {
+        updateTarget: this.updateTarget.bind(this)
+      }
     }
 
     isLeaving() {
       return !!this.props.leaveCallback
-    }
-
-    checkLeaveStatus() {
-      const resting = map(this.transitions, transition => transition.resting)
-
-      if(all(resting)) {
-        this.props.leaveCallback()
-      }
     }
 
     leave() {
@@ -39,8 +35,6 @@ export default function createContainer(Component, getTarget) {
         if(target !== undefined) {
           transition.set(target.value)
         }
-
-        transition.on('rest', this.checkLeaveStatus)
       })
     }
 
@@ -51,24 +45,51 @@ export default function createContainer(Component, getTarget) {
         if(target !== undefined) {
           transition.set(target.value)
         }
-
-        transition.off('rest', this.checkLeaveStatus)
       })
-    }
-
-    getChildContext() {
-      return {
-        update: this.update.bind(this)
-      }
-    }
-
-    onRender(state) {
-      this.setState(state)
     }
 
     onTransitionUpdate(key, value) {
       this.setState({
         [key]: value
+      })
+    }
+
+    onTransitionRest() {
+      if(this.isLeaving()) {
+        const resting = map(this.transitions, transition => transition.resting)
+
+        if(all(resting)) {
+          this.props.leaveCallback()
+        }
+      }
+    }
+
+    updateTarget(...args) {
+      if(this.isLeaving()) {
+        return
+      }
+
+      this.target = getTarget.call(null, ...args)
+
+      forEach(this.target.state, (params, key) => {
+        let transition = this.transitions[key]
+
+        if(!transition) {
+          const enterTarget = this.target.enter && this.target.enter[key]
+          const TransitionType = transitionTypes[params.transition.type]
+
+          transition = new TransitionType(params.transition)
+          transition.on('update', this.onTransitionUpdate.bind(this, key))
+          transition.on('rest', this.onTransitionRest.bind(this, key))
+
+          if(enterTarget) {
+            transition.position = enterTarget.value
+          }
+
+          this.transitions[key] = transition
+        }
+
+        transition.set(params.value)
       })
     }
 
@@ -85,36 +106,9 @@ export default function createContainer(Component, getTarget) {
       }
     }
 
-    update(...args) {
-      if(this.isLeaving()) {
-        return
-      }
-
-      this.target = getTarget.call(null, ...args)
-
-      forEach(this.target.state, (params, key) => {
-        let transition = this.transitions[key]
-
-        if(!transition) {
-          const enterTarget = this.target.enter && this.target.enter[key]
-          const TransitionType = transitionTypes[params.transition.type]
-
-          transition = new TransitionType()
-          transition.on('update', this.onTransitionUpdate.bind(this, key))
-
-          if(enterTarget) {
-            transition.position = enterTarget.value
-          }
-
-          this.transitions[key] = transition
-        }
-
-        transition.set(params.value)
-      })
-    }
-
     shouldComponentUpdate(nextProps, nextState) {
-      return !shallowEqual(this.state, nextState) || !shallowEqual(this.props, nextProps)
+      return !shallowEqual(this.state, nextState)
+          || !shallowEqual(this.props, nextProps)
     }
 
     render() {
@@ -123,7 +117,7 @@ export default function createContainer(Component, getTarget) {
   }
 
   ContainerComponent.childContextTypes = {
-    update: React.PropTypes.func.isRequired
+    updateTarget: React.PropTypes.func.isRequired
   }
 
   return ContainerComponent

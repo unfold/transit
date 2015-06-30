@@ -6,7 +6,7 @@ export default class StateComponent extends React.Component {
   constructor(props, context) {
     super(props)
 
-    this.update = context.update
+    this.updateTarget = context.updateTarget
   }
 
   componentWillReceiveProps(nextProps) {
@@ -14,12 +14,12 @@ export default class StateComponent extends React.Component {
     const nextPropsWithoutChildren = omit(nextProps, 'children')
 
     if(!shallowEqual(propsWithoutChildren, nextPropsWithoutChildren)) {
-      this.context.update(nextProps)
+      this.updateTarget(nextProps)
     }
   }
 
   componentDidMount() {
-    this.context.update(this.props)
+    this.updateTarget(this.props)
   }
 
   render() {
@@ -28,5 +28,5 @@ export default class StateComponent extends React.Component {
 }
 
 StateComponent.contextTypes = {
-  update: React.PropTypes.func.isRequired
+  updateTarget: React.PropTypes.func.isRequired
 }
