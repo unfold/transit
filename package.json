@@ -22,6 +22,7 @@
   "scripts": {
     "start": "./node_modules/.bin/nws -d examples/build -p 4000 & webpack --config examples/webpack.config -w",
     "build": "scripts/build.sh",
+    "build-examples": "webpack --config examples/webpack.config",
     "release": "scripts/release.sh"
   },
   "author": "",
