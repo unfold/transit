@@ -63,7 +63,8 @@ class Item extends React.Component {
       height: 100,
       margin: 20,
       color: color,
-      transform: `rotateZ(${rotateZ}deg) rotateY(${rotateY}deg) scale(${scale})`
+      transform: `rotateZ(${rotateZ}deg) rotateY(${rotateY}deg) scale(${scale})`,
+      cursor: 'pointer'
     })
 
     return (
@@ -88,20 +89,31 @@ class Item extends React.Component {
   }
 }
 
-export default Transit.create(Item, state => {
+export default Transit.create(Item, props => {
   return {
-    rotateZ: 0,
-    rotateY: state.active ? 180 : 0,
-    scale: state.down ? 1 : state.hover ? 1.2 : 1
-  }
-}, state => {
-  return {
-    rotateZ: 360,
-    scale: 0
-  }
-}, state => {
-  return {
-    rotateZ: 0,
-    scale: 0
+    transition: {
+      type: Transit.transitions.spring
+    },
+
+    state: {
+      rotateZ: 0,
+      rotateY: props.active ? 180 : 0,
+      scale: {
+        transition: {
+          friction: 0.1337
+        },
+        value: props.down ? 1 : !props.down && props.hover ? 1.2 : 1
+      }
+    },
+
+    enter: {
+      rotateZ: 360,
+      scale: 0
+    },
+
+    leave: {
+      rotateZ: 0,
+      scale: 0
+    }
   }
 })

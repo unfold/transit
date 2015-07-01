@@ -34,12 +34,15 @@ export default class Ball extends React.Component {
   }
 }
 
-export default Transit.create(Ball, state => {
+export default Transit.create(Ball, props => {
   return {
-    x: state.x - 35
+    state: {
+      x: {
+        value: props.x - 35,
+        transition: {
+          type: 'spring'
+        }
+      }
+    }
   }
-}, state => {
-  return {}
-}, state => {
-  return {}
 })

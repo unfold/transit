@@ -26,7 +26,7 @@ var StateComponent = (function (_React$Component) {
 
     _React$Component.call(this, props);
 
-    this.update = context.update;
+    this.updateTarget = context.updateTarget;
   }
 
   _inherits(StateComponent, _React$Component);
@@ -36,12 +36,12 @@ var StateComponent = (function (_React$Component) {
     var nextPropsWithoutChildren = _lodashObjectOmit2['default'](nextProps, 'children');
 
     if (!_reactLibShallowEqual2['default'](propsWithoutChildren, nextPropsWithoutChildren)) {
-      this.context.update(nextProps);
+      this.updateTarget(nextProps);
     }
   };
 
   StateComponent.prototype.componentDidMount = function componentDidMount() {
-    this.context.update(this.props);
+    this.updateTarget(this.props);
   };
 
   StateComponent.prototype.render = function render() {
@@ -54,6 +54,6 @@ var StateComponent = (function (_React$Component) {
 exports['default'] = StateComponent;
 
 StateComponent.contextTypes = {
-  update: _react2['default'].PropTypes.func.isRequired
+  updateTarget: _react2['default'].PropTypes.func.isRequired
 };
 module.exports = exports['default'];

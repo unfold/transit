@@ -1,11 +1,8 @@
-import Emitter from 'wildemitter'
 import assign from 'lodash/object/assign'
 import defaults from 'lodash/object/defaults'
 
-export default class Spring extends Emitter {
+export default class Spring {
   constructor(params) {
-    super()
-
     this.params = defaults(params || {}, {
       stiffness: 0.9,
       friction: 0.3,
@@ -24,14 +21,16 @@ export default class Spring extends Emitter {
   }
 
   scheduleStep() {
+    const {onUpdate, onRest} = this.params
     if(!this.shouldRest()) {
       this.resting = false
       requestAnimationFrame(this.step)
     } else {
       this.resting = true
       this.position = this.target
-      this.emit('update', this.position)
-      this.emit('rest')
+
+      onUpdate && onUpdate(this.position)
+      onRest && onRest()
     }
   }
 
@@ -44,6 +43,7 @@ export default class Spring extends Emitter {
   }
 
   step() {
+    const onUpdate = this.params.onUpdate
     const params = this.params
 
     const now = new Date().getTime()
@@ -61,7 +61,7 @@ export default class Spring extends Emitter {
 
     this.time = now
 
-    this.emit('update', this.position)
+    onUpdate && onUpdate(this.position)
 
     this.scheduleStep()
   }
