@@ -30,8 +30,12 @@ class Application extends React.Component {
   }
 
   render() {
+    const style = {
+      WebkitUserSelect: 'none'
+    }
+
     return (
-      <div>
+      <div style={style}>
         <h2>Spring</h2>
         <Ball />
 

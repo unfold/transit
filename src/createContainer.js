@@ -6,6 +6,7 @@ import forEach from 'lodash/collection/forEach'
 import shallowEqual from 'react/lib/shallowEqual'
 
 import * as transitionTypes from './transitions'
+import normalizeTarget from './normalizeTarget'
 
 export default function createContainer(Component, getTarget) {
   class ContainerComponent extends React.Component {
@@ -69,14 +70,15 @@ export default function createContainer(Component, getTarget) {
         return
       }
 
-      this.target = getTarget.call(null, ...args)
+      this.target = normalizeTarget(getTarget.call(null, ...args))
 
       forEach(this.target.state, (params, key) => {
         let transition = this.transitions[key]
 
         if(!transition) {
+          const type = params.transition.type
           const enterTarget = this.target.enter && this.target.enter[key]
-          const TransitionType = transitionTypes[params.transition.type]
+          const TransitionType = typeof type === 'string' ? transitionTypes[type] : type
 
           transition = new TransitionType(assign({
             onUpdate: this.onTransitionUpdate.bind(this, key),

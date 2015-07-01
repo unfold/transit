@@ -63,7 +63,8 @@ class Item extends React.Component {
       height: 100,
       margin: 20,
       color: color,
-      transform: `rotateZ(${rotateZ}deg) rotateY(${rotateY}deg) scale(${scale})`
+      transform: `rotateZ(${rotateZ}deg) rotateY(${rotateY}deg) scale(${scale})`,
+      cursor: 'pointer'
     })
 
     return (
@@ -88,72 +89,31 @@ class Item extends React.Component {
   }
 }
 
-const transition = {
-  type: 'spring'
-}
-
 export default Transit.create(Item, props => {
   return {
+    transition: {
+      type: Transit.transitions.spring
+    },
+
     state: {
-      rotateZ: {
-        transition: transition,
-        value: 0
-      },
-      rotateY: {
-        transition: transition,
-        value: props.active ? 180 : 0
-      },
+      rotateZ: 0,
+      rotateY: props.active ? 180 : 0,
       scale: {
-        transition: transition,
+        transition: {
+          friction: 0.1337
+        },
         value: props.down ? 1 : !props.down && props.hover ? 1.2 : 1
       }
     },
 
     enter: {
-      rotateZ: {
-        transition: transition,
-        value: 360
-      },
-      scale: {
-        transition: transition,
-        value: 0
-      }
+      rotateZ: 360,
+      scale: 0
     },
 
     leave: {
-      rotateZ: {
-        transition: transition,
-        value: 0
-      },
-      scale: {
-        transition: transition,
-        value: 0
-      }
+      rotateZ: 0,
+      scale: 0
     }
   }
 })
-
-// Todo: implement transformer that transforms the following into the above
-// export default Transit.create(Item, props => {
-//   return {
-//     transition: {
-//       type: 'spring'
-//     },
-//
-//     state: {
-//       rotateZ: 0,
-//       rotateY: props.active ? 180 : 0,
-//       scale: props.down ? 1 : !props.down && props.hover ? 1.2 : 1
-//     },
-//
-//     enter: {
-//       rotateZ: 360,
-//       scale: 0
-//     },
-//
-//     leave: {
-//       rotateZ: 0,
-//       scale: 0
-//     }
-//   }
-// })
