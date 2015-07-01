@@ -42,6 +42,10 @@ var _transitions = require('./transitions');
 
 var transitionTypes = _interopRequireWildcard(_transitions);
 
+var _normalizeTarget = require('./normalizeTarget');
+
+var _normalizeTarget2 = _interopRequireDefault(_normalizeTarget);
+
 function createContainer(Component, getTarget) {
   var ContainerComponent = (function (_React$Component) {
     function ContainerComponent(props) {
@@ -120,14 +124,15 @@ function createContainer(Component, getTarget) {
         args[_key] = arguments[_key];
       }
 
-      this.target = getTarget.call.apply(getTarget, [null].concat(args));
+      this.target = _normalizeTarget2['default'](getTarget.call.apply(getTarget, [null].concat(args)));
 
       _lodashCollectionForEach2['default'](this.target.state, function (params, key) {
         var transition = _this3.transitions[key];
 
         if (!transition) {
+          var type = params.transition.type;
           var enterTarget = _this3.target.enter && _this3.target.enter[key];
-          var TransitionType = transitionTypes[params.transition.type];
+          var TransitionType = typeof type === 'string' ? transitionTypes[type] : type;
 
           transition = new TransitionType(_lodashObjectAssign2['default']({
             onUpdate: _this3.onTransitionUpdate.bind(_this3, key),

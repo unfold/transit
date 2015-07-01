@@ -1,6 +1,6 @@
 {
   "name": "react-transit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Declarative state/prop transitions in React",
   "main": "lib",
   "repository": {
